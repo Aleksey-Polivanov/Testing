@@ -4,11 +4,11 @@ import requests
 import json
 import unittest
 
-f = open('../constants.json')
+f = open('constants.json')
 constants = json.load(f)
 
 # ___________________Requests___________________
-def get_autoffolow_groups(location_info: Optional[dict]) -> dict:
+def get_autoffolow_groups(location_info: Optional[dict], test_name) -> dict:
     url = constants['base_url'] + "Know/user/groups"
     headers = {"knowSessionId": constants['oleh_session_id']}
     body = {
@@ -19,6 +19,7 @@ def get_autoffolow_groups(location_info: Optional[dict]) -> dict:
         }
     }
 
+    print(f"Run test: {test_name}")
     response = requests.post(url, json=body, headers=headers)
     return response.json()
 
@@ -26,8 +27,6 @@ def get_autoffolow_groups(location_info: Optional[dict]) -> dict:
 
 class Tests(unittest.TestCase):
     def test_autofollow_US_Georgia_County_Muscogee(self):
-        print("test_autofollow_US_Georgia_Muscogee_County")
-
         location = {
             "Country": "United States",
             "State": "Georgia",
@@ -37,7 +36,7 @@ class Tests(unittest.TestCase):
             "Longitude": -84.8983554
         }
 
-        res = get_autoffolow_groups(location)
+        res = get_autoffolow_groups(location, 'test_autofollow_US_Georgia_County_Muscogee')
         self.assertEqual(res["responseCode"], 100)
 
         # self.assertEqual(res["responseCode"], 100)
@@ -49,7 +48,6 @@ class Tests(unittest.TestCase):
         # assert "39f4b06d-bc3d-423e-b934-1d470fe555d6" in res["responseObject"]["autoFollowingGroupIds"]  # Georgia
         # assert "bcee640b-7beb-4817-b0be-9d247cec9683" in res["responseObject"]["autoFollowingGroupIds"]  # Muscogee County
     def test_autofollow_US_Georgia_County_Chatham(self):
-        print("test_autofollow_US_Georgia_Chatham_County")
         location = {
             "Country": "United States",
             "State": "Georgia",
@@ -59,7 +57,8 @@ class Tests(unittest.TestCase):
             "Longitude": -81.1195685
         }
 
-        res = get_autoffolow_groups(location)
+        res = get_autoffolow_groups(location, 'test_autofollow_US_Georgia_County_Chatham')
+
         self.assertEqual(res["responseCode"], 100)
 
         # assert res["responseObject"]["groups"]
@@ -70,7 +69,6 @@ class Tests(unittest.TestCase):
         # assert "39f4b06d-bc3d-423e-b934-1d470fe555d6" in res["responseObject"]["autoFollowingGroupIds"]  # Georgia
         # assert "ae896ec6-ee28-4ca3-b694-0eebb447a07e" in res["responseObject"]["autoFollowingGroupIds"]  # Chatham County
     def test_autofollow_US_Kentucky_Fayette_County_Lexington(self):
-        print("test_autofollow_US_Kentucky_Fayette_County_Lexington")
         location = {
             "Country": "United States",
             "State": "Kentucky",
@@ -80,17 +78,17 @@ class Tests(unittest.TestCase):
             "Longitude": -84.50262
         }
 
-        res = get_autoffolow_groups(location)
-        self.assertEqual(res["responseCode"], 100)
+        res = get_autoffolow_groups(location, 'test_autofollow_US_Kentucky_Fayette_County_Lexington')
 
+        self.assertEqual(res["responseCode"], 100)
         # assert res["responseObject"]["groups"]
         # assert res["responseObject"]["autoFollowingGroupIds"]
         # assert "dbfbeb11-4da7-447f-8586-4ec6a1209d05" in res["responseObject"]["autoFollowingGroupIds"]  # Know NEWS!
         # assert "37f5f3e2-e786-4bc7-95c6-0c578cfb197b" in res["responseObject"]["autoFollowingGroupIds"]  # Lexington
     def test_autofollow_no_location(self):
         location = None
+        res = get_autoffolow_groups(location, 'test_autofollow_no_location')
 
-        res = get_autoffolow_groups(location)
         self.assertEqual(res["responseCode"], 100)
 
         # assert res["responseObject"]["groups"]

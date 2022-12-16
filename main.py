@@ -1,22 +1,25 @@
-from Autofollow_Groups.get_autofollow_groups import \
-    autofollow_no_location, \
-    autofollow_US_Georgia_County_Muscogee, \
-    autofollow_US_Georgia_County_Chatham, \
-    autofollow_US_Kentucky_Fayette_County_Lexington
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import unittest
+import glob
+import os
 
-class Tests(unittest.TestCase):
-    def test_autofollow_US_Georgia_County_Muscogee(self):
-        autofollow_US_Georgia_County_Muscogee(self)
-    def test_autofollow_US_Georgia_County_Chatham(self):
-        autofollow_US_Georgia_County_Chatham(self)
-    def test_autofollow_US_Kentucky_Fayette_County_Lexington(self):
-        autofollow_US_Kentucky_Fayette_County_Lexington(self)
-    def test_autofollow_no_location(self):
-        autofollow_no_location(self)
-
+test_pattern = 'test_*.py'
 
 if __name__ == '__main__':
-    unittest.main()
 
+    # Find all files matching pattern
+    module_files = sorted(glob.glob(test_pattern))
+    module_names = [os.path.splitext(os.path.basename(module_file))[0] for module_file in module_files]
+
+    # Iterate over the found files
+    print('Importing:')
+    for module in module_names:
+        print('    ', module)
+        exec('import %s' % module)
+
+    print('Done!')
+    print()
+
+    unittest.main(defaultTest=module_names)
